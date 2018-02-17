@@ -1,0 +1,8 @@
+%[X, Letters, WordsIndex] = mySvm2mat('train_small.txt', 12);
+%X = load_set('train.txt', 25953);
+%save('train_x.mat', 'X');
+
+% Using the load_set we can store the training data in a .mat matrix file
+% which ma
+data = matfile('train_x.mat');
+X = data.X;
