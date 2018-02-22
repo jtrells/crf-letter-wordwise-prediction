@@ -40,6 +40,18 @@ function T(t, m, n) {
     return t[n * NUM_LETTERS + m];
 }
 
+function maximize(array, start, end) {
+    if (start >= end) {
+        return array[0];
+    }
+
+    const halfLength = (end - start) >> 1;
+    let a = maximize(array, start, start + halfLength);
+    let b = maximize(array, start + halfLength + 1, end);
+
+    return (a.p > b.p) ? a : b;
+}
+
 function decode_input(x, w, t) {
 
     // both of these will be length 26 (num letters)
@@ -84,36 +96,22 @@ function decode_input(x, w, t) {
     // maximize the very last subword
     memo.sort((a, b) => b.p - a.p);
     console.log(memo[0].subword, memo[0].p);
+//    console.log(memo[0].subword.split('').join('\n'));
 }
 
 function bruteforce_input(x, w, t) {
-    const LIMIT = 4; // WORD_LENGTH; // this takes a really fricking long time
 
-    let max_p = -1000;
-    let max_word;
+    const LIMIT = 5; // WORD_LENGTH; // this takes a really fricking long time
 
-    function recurse(word, p, depth) {
-        if (depth < LIMIT) {
-            for (let i = 0; i < NUM_LETTERS; ++i) {
-                word[depth] = i;
-                let potential = xDotW(x, depth, w, i) + T(t, word[depth - 1], i);
-                recurse(word, p + potential, depth + 1);
-            }
-        }
-        else {
-            if (p > max_p) {
-                max_p = p;
-                max_word = word.slice(); // deep clone the array (since original gets mutated recursively)
-            }
-        }
-    }
+    // function recurse(subword, p, j, depth) {
+    //     if (depth < LIMIT) {
+    //         for (let i = 0; i < NUM_LETTERS; ++i) {
+    //             recurse(subword + ALPHABET[i], j + 1, depth + 1);
+    //         }
+    //     }
+    // }
 
-    for (let i = 0; i < NUM_LETTERS; ++i) {
-        recurse([i], xDotW(x, 0, w, i), 1);
-    }
-
-    // this is indexed by 0 --> output should index by 1
-    console.log(max_word.map(x => ALPHABET[x]).join(''), max_p);
+    // recurse('', 0, 0, 0);
 }
 
 
