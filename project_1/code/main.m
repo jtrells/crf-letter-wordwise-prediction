@@ -12,3 +12,5 @@ X = data.X;
 letter_row = 1;
 x1 = reshape(X(letter_row,:), [16, 8]);
 imshow(x1);
+
+A = importdata('..\\data\\decode_input.txt');
