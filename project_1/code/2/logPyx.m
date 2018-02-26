@@ -1,76 +1,53 @@
-function [ F, B, Z ] = logPyx(x, w, T)
+function [ prob ] = logPyx(x, w, T)
     
     global NUM_LETTERS;
     WORD_LENGTH = size(x, 2);
     
-    Z = 0;
-    F = zeros(NUM_LETTERS * NUM_LETTERS, WORD_LENGTH);   % Forward-memo
-    B = zeros(NUM_LETTERS * NUM_LETTERS, WORD_LENGTH);   % Backward-memo
-
-    T_ = reshape(T, NUM_LETTERS * NUM_LETTERS, 1);       % log(e{T})
+    F = zeros(NUM_LETTERS, WORD_LENGTH);   % Forward-memo
     
+    % initialization for forward calculation
     x_potential = zeros(NUM_LETTERS, 1);
     for i = 1 : NUM_LETTERS
         x_potential(i) = dot(w(:,i), x(:,1));   % log(e{w.x})
     end
     
-    % initialization for forward calculation
-    F(:,1) = repmat(x_potential, [NUM_LETTERS, 1]);
-    Z = sum(x_potential);
+    F(:,1) = x_potential;
     
+    % iterate through the rest of the letters
     for j = 2 : WORD_LENGTH
        for i = 1 : NUM_LETTERS
            x_potential(i) = dot(w(:,i), x(:,j));  % log(e{w.x})
        end 
-       
-       pot_plus_trans = repmat(x_potential, [NUM_LETTERS,1]) + T_;
-       a_j = pot_plus_trans + F(:, j-1);
-       
-       % now do log sum trick before assigning it to the memo entry
-       % M stores the max potential for each letter
-       M = reshape(a_j, NUM_LETTERS, NUM_LETTERS);
-       M = max(M, [], 2);
-       M = repmat(M, [NUM_LETTERS, 1]);
-       
-       [log_marginal_j, Z] = calculate_marginal(a_j, M, Z);
-       F(:,j) = M + log_marginal_j;
+       F(:,j) = calculate_memo(x_potential, F(:, j-1), T);
     end
     
+    Z = sum(F(:, WORD_LENGTH));
     
-    x_potential = zeros(NUM_LETTERS, 1);
-    for i = 1 : NUM_LETTERS
-        x_potential(i) = dot(w(:,i), x(:,WORD_LENGTH));   % log(e{w.x})
-    end
-    % initialization for forward calculation
-    B(:,WORD_LENGTH) = repmat(x_potential, [NUM_LETTERS, 1]);
-    for j = WORD_LENGTH - 1: -1: 1
-       for i = 1 : NUM_LETTERS
-           x_potential(i) = dot(w(:,i), x(:,j));  % log(e{w.x})
-       end 
-       
-       pot_plus_trans = repmat(x_potential, [NUM_LETTERS,1]) + T_;
-       a_j = pot_plus_trans + B(:, j+1);
-       
-       M = reshape(a_j, NUM_LETTERS, NUM_LETTERS);
-       M = max(M, [], 2);
-       M = repmat(M, [NUM_LETTERS, 1]);
-       
-       log_marginal_j = calculate_marginal(a_j, M, Z);
-       B(:,j) = M + log_marginal_j;
-    end
-    
-    c = 1;
+    % so with F and Z return the probability
+    % but which row? :(
+    prob = F(:, WORD_LENGTH)/Z;
 end
 
-function [marginal, Z] = calculate_marginal(a_j, M, Z)
-% Marginalize over each letter to get the log(sum_i e^(a_i - b))
-% to do log trick, https://youtu.be/-RVM21Voo7Q?t=734
+function [new_memo] = calculate_memo(potential_i, last_memo, T)
     global NUM_LETTERS;
+    % Expand vectors to make weighted calculations easier
+    feature_potential = repmat(potential_i, [NUM_LETTERS, 1]);
+    feature_T = reshape(T, NUM_LETTERS * NUM_LETTERS, 1); % log(e{T})
+    feature_memo = repmat(last_memo, [NUM_LETTERS, 1]);
     
-    marginal = exp(a_j - M);
-    marginal = reshape(marginal, NUM_LETTERS, NUM_LETTERS);
-    marginal = log(sum(marginal, 2));
+    % log_alpha(k) = log{sum_k-1 exp(w.x_k + T + log_alpha(k-1)) }
+    a_i = feature_potential + feature_T + feature_memo;
+    % find max{a_i} for sum log trick
+    M = reshape(a_i, NUM_LETTERS, NUM_LETTERS);
+    M = max(M, [], 2);
+    M = repmat(M, [NUM_LETTERS, 1]);
     
-    Z = Z + sum(marginal);
-    marginal = repmat(marginal, [NUM_LETTERS,1]);
+    % log_alpha(k) = M + log{sum_k-1 exp(a_i - b)}
+    % https://youtu.be/-RVM21Voo7Q?t=734
+    sum_k_1 = exp(a_i - M);
+    sum_k_1 = reshape(sum_k_1, NUM_LETTERS, NUM_LETTERS);
+    % sum row wise for each letter
+    sum_k_1 = sum(sum_k_1, 2);
+    
+    new_memo = M(1:NUM_LETTERS, 1) + log(sum_k_1); 
 end
