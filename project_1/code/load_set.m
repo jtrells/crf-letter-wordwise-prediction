@@ -1,4 +1,4 @@
-function [ X ] = load_set( file, no_letters )
+function [ X, words ] = load_set( file, no_letters )
 %LOAD_SET Load the letters dataset into a X matrix with dimensions
 %   no_letters x 128. The number of rows in the file can be obtained by
 %   reading the file and counting rows but if we know it a priori, we do
@@ -21,11 +21,28 @@ fid = fopen(file);
 X = zeros(no_letters, 128);
 i_x = 1;
 
+words = {};
+
+old_word = -1;
+word = [];
 while ~feof(fid) % not end of the file 
     s = fgetl(fid); % get a line
+    
+    
+    
     j=6; x=zeros(1,128);
     
     line = strsplit(s);
+    new_word = line{4};
+    
+    if new_word ~= old_word
+        if old_word > 0
+            words{old_word} = word;
+        end
+        old_word = new_word;
+        word = [];
+    end
+    
     i = 1;
     while j <= length(line) - 1     %idk what's the use of the last element
         x(i) = str2num(line{j});
@@ -33,6 +50,8 @@ while ~feof(fid) % not end of the file
         i = i + 1;
     end
     X(i_x,:) = x;
+    word = [word x];
+    
     i_x = i_x + 1;
 end
 

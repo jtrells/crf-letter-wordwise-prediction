@@ -19,7 +19,7 @@ function [ F ] = forwardBackwardsNoTrick(x, w, T)
        
        for d = 1 : NUM_LETTERS
            for s = 1 : NUM_LETTERS
-               F(d,j) = F(d,j) + F(d,j-1) * exp(T(s, d)) * exp(dot(w(:,d), x(:,j)));
+               F(d,j) = F(d,j) + F(s,j-1) * exp(T(s, d)) * exp(dot(w(:,d), x(:,j)));
            end
        end
     end

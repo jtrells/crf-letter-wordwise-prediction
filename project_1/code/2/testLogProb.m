@@ -9,31 +9,41 @@ ALPHABET = 'abcdefghijklmnopqrstuvwxyz';
 
 % loading this values only to use X for test. I believe we have
 % to report with respect of data/train
-[x, junk1, junk2] = loadDecoderSet('/data/decode_input.txt'); 
+[x, junk1, junk2] = loadDecoderSet('./decode_input.txt'); 
 
 % Load weights and transition from the given model for 2(a)
-[w, T] = loadModel('/data/model.txt');
-[F, B, log_Z] = forward_backwards(x, w, T);
+[w, T] = loadModel('./model.txt');
+
+data = matfile('train_x.mat');
+X = data.X;
+
+word = [18 11 22 17 19];
+x_5 = x(:, 1:5);
+
+% calculate numerator with objective function
+num = exp(dot(w(:, word(1)), x(:, 1)));
+for i = 2 : length(word)
+    num = num * exp(T(word(i-1), word(i))) * exp(dot(w(:, word(i)), x(:, i)));
+end
+
+% calculate log num with objective function
+lognum = dot(w(:,word(1)), x(:, 1));
+for i = 2 : length(word)
+    lognum = lognum + T(word(i-1), word(i)) + dot(w(:, word(i)), x(:, i));
+end
+
+lognumVerify = log(num);
+
+
+% calculate Z
+[F, logz] = logMemo(x_5, w, T);
+log_p_y_x = lognum - logz;
+
 
 [F_] = forwardBackwardsNoTrick(x, w, T);
+z = sum(F_(:, 5));
+logzVerify = log(z);
 
-% calculate numerator
-% assume for test a word of 5 letters, so let's take the first 5 columns
-% for F and recalculate log_Z. The previous value was for m = 100
-numerator = 1;
-log_Z = sum(F(:,5));
-word = [18 11 22 17 19]; % first 5 letters of decoder 1c
+p_y_x = num / z;
 
-for i = 1 : length(word) - 1
-    numerator = numerator * exp(dot(w(:,word(i)), x(:,i))) * exp(T(word(i), word(i+1)));
-end
-numerator = numerator * exp(dot(w(:,word(length(word))), x(:,length(word))));
-log_p_y_given_x = numerator/sum(F_(:,5));
-
-
-numerator2 = 0;
-for i = 1 : length(word) - 1
-    numerator2 = numerator2 + dot(w(:,word(i)), x(:,i)) + T(word(i), word(i+1));
-end
-numerator2 = numerator2 + dot(w(:,word(length(word))), x(:,length(word)));
-
+log_p_y_xVerify = log(p_y_x);
