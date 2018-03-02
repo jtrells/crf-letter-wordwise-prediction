@@ -16,6 +16,8 @@ function [ X, words ] = load_set( file, no_letters )
 %   6th - 128th: Sequence of zeros and ones that make the letter
 % 129th:      I have no idea.
 
+ALPHABET = 'abcdefghijklmnopqrstuvwxyz';
+
 clc
 fid = fopen(file);
 X = zeros(no_letters, 128);
@@ -28,19 +30,22 @@ word = [];
 while ~feof(fid) % not end of the file 
     s = fgetl(fid); % get a line
     
-    
-    
     j=6; x=zeros(1,128);
     
     line = strsplit(s);
-    new_word = line{4};
+    new_word = str2num(line{4});
+    letter = line{2};
+    letter_number = strfind(ALPHABET, letter);
     
     if new_word ~= old_word
         if old_word > 0
             words{old_word} = word;
         end
         old_word = new_word;
-        word = [];
+        
+        word.letter = [];
+        word.letter_number = []; 
+        word.image = [];
     end
     
     i = 1;
@@ -50,7 +55,10 @@ while ~feof(fid) % not end of the file
         i = i + 1;
     end
     X(i_x,:) = x;
-    word = [word x];
+    
+    word.letter = [word.letter letter];
+    word.letter_number = [word.letter_number letter_number];
+    word.image = [word.image x'];
     
     i_x = i_x + 1;
 end
