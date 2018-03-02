@@ -9,12 +9,12 @@ ALPHABET = 'abcdefghijklmnopqrstuvwxyz';
 
 % loading this values only to use X for test. I believe we have
 % to report with respect of data/train
-[x, junk1, junk2] = loadDecoderSet('./decode_input.txt'); 
+[x, junk1, junk2] = loadDecoderSet(strcat(pwd,'\code\2\decode_input.txt')); 
 
 % Load weights and transition from the given model for 2(a)
-[w, T] = loadModel('./model.txt');
+[w, T] = loadModel(strcat(pwd,'\code\2\model.txt'));
 
-data = matfile('train_x.mat');
+data = matfile(strcat(pwd,'\code\2\train_x.mat'));
 X = data.X;
 
 word = [18 11 22 17 19];
@@ -36,7 +36,7 @@ lognumVerify = log(num);
 
 
 % calculate Z
-[F, logz] = logMemo(x_5, w, T);
+[F, logz, B] = logMemo(x_5, w, T);
 log_p_y_x = lognum - logz;
 
 
