@@ -1,23 +1,23 @@
-function [F, logz] = get_forward_memo_mat(x, w, T)
+function [B, logZ] = get_backwards_memo_mat(x, w, T)
     
     global NUM_LETTERS;
     WORD_LENGTH = size(x, 2);
     
-    F = zeros(NUM_LETTERS, WORD_LENGTH);   % Forward-memo
-    % initialization
+    B = zeros(NUM_LETTERS, WORD_LENGTH);   % Backwards-memo
     for i = 1 : NUM_LETTERS
-        F(i, 1) = w(:,i)' * x(:,1);   % ({w.x})
+        B(i, WORD_LENGTH) = w(:,i)' * x(:, WORD_LENGTH);
     end
     
     potential = zeros(NUM_LETTERS, 1);
-    for j = 2 : WORD_LENGTH
+    for j = WORD_LENGTH - 1: -1: 1
         for i = 1 : NUM_LETTERS
-            potential(i) = w(:,i)' * x(:,j);
-        end
-        F(:, j) = calculate_memo(potential, F(:, j-1), T);
+           potential(i) = w(:,i)' * x(:,j);  % log(e{w.x})
+        end 
+        B(:,j) = calculate_memo(potential, B(:, j+1), T);
     end
     
-    logz = log(sum(exp(F(:, WORD_LENGTH))));
+    logZ = log(sum(exp(B(:, 1))));
+    
 end
 
 function [new_memo] = calculate_memo(potential_i, last_memo, T)
@@ -25,7 +25,7 @@ function [new_memo] = calculate_memo(potential_i, last_memo, T)
      
     % Expand vectors to make weighted calculations easier
     feature_potential = repmat(potential_i, [NUM_LETTERS, 1]);
-    feature_T = reshape(T', NUM_LETTERS * NUM_LETTERS, 1); % log(e{T})
+    feature_T = reshape(T, NUM_LETTERS * NUM_LETTERS, 1); % log(e{T})
     last_memo = repmat(last_memo', [NUM_LETTERS, 1]);
     feature_memo = reshape(last_memo, NUM_LETTERS * NUM_LETTERS, 1);
     

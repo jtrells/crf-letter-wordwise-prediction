@@ -10,6 +10,13 @@ words = data.words;
 word = words{1};
 x = word.image;
 y = word.letter_number;
+% 
+% for i = 1 : 10000
+%  [F1,logZ1] = get_forward_memo(x, w, T);
+%  [F2,logZ2] = get_forward_memo_mat(x, w, T);
+% end
 
-[F1,logZ1] = get_forward_memo(x, w, T);
-[F2,logZ2] = get_forward_memo_mat(x, w, T);
+for i = 1 : 10000
+[B1,logZ1] = get_backwards_memo(x, w, T);
+[B2,logZ2] = get_backwards_memo_mat(x, w, T);
+end

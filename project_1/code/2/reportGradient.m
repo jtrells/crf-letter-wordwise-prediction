@@ -23,8 +23,8 @@ for index = 1 : num_words
     x = word.image;
     y = word.letter_number;
 
-    [F, logz] = get_forward_memo(x, w, T);
-    [B, junk] = get_backwards_memo(x, w, T);
+    [F, logz] = get_forward_memo_mat(x, w, T);
+    [B, junk] = get_backwards_memo_mat(x, w, T);
     wordLength = length(y);
 
     for s = 1 : wordLength
@@ -38,7 +38,7 @@ for index = 1 : num_words
         end
     end
 end
-save('wGrads.mat', 'wGrads');
+save('wGrads_mat.mat', 'wGrads');
 
 
 % tGrads = zeros(26, 26);
