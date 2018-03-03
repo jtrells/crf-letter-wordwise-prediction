@@ -14,54 +14,55 @@ words = data.words;
 num_words = size(words, 2);
 sum_logs = 0;
 
+alphabet_size = 26;
+wGrads = zeros(LETTER_SIZE, 26);
 
-% wGrads = zeros(LETTER_SIZE, 26);
-
-% for index = 1 : num_words
-
-%     word = words{index};
-%     x = word.image;
-%     y = word.letter_number;
-
-%     [F, B, logz] = logMemo(x, w, T);
-%     wordLength = length(y);
-
-%     for s = 1 : wordLength
-
-%         for letter = 1 : 26
-%             indicator = y(s) == letter;
-
-%             p = calculateYjGivenX(F, B, logz, dot(x(:,s), w(:,letter)), T, s, letter, wordLength);
-
-%             wGrads(:, letter) = wGrads(:, letter) + (indicator - p) * x(:, s);
-%         end
-%     end
-% end
-% save('wGrads.mat', 'wGrads');
-
-
-tGrads = zeros(26, 26);
 for index = 1 : num_words
 
     word = words{index};
     x = word.image;
     y = word.letter_number;
 
-    [F, B, logz] = logMemo(x, w, T);
+    [F, logz] = get_forward_memo(x, w, T);
+    [B, junk] = get_backwards_memo(x, w, T);
     wordLength = length(y);
 
-    for s = 1 : wordLength - 1
+    for s = 1 : wordLength
 
-        for i = 1 : 26
-            for j = 1 : 26
-                indicator = (y(s) == i && y(s+1) == j);
+        for letter = 1 : 26
+            indicator = y(s) == letter;
 
-                p = calculateYjYj_1GivenX2(F, B, logz, T, w, x, i, j, s, wordLength)
+            p = calculateYjGivenX(F, B, logz, x(:,s)'* w(:,letter), T, s, letter, wordLength, alphabet_size);
 
-                T(i, j) = T(i, j) + indicator - p;
-            end
+            wGrads(:, letter) = wGrads(:, letter) + (indicator - p) * x(:, s);
         end
     end
-
 end
-save('tGrads.mat', 'tGrads');
+save('wGrads.mat', 'wGrads');
+
+
+% tGrads = zeros(26, 26);
+% for index = 1 : num_words
+% 
+%     word = words{index};
+%     x = word.image;
+%     y = word.letter_number;
+% 
+%     [F, B, logz] = logMemo(x, w, T);
+%     wordLength = length(y);
+% 
+%     for s = 1 : wordLength - 1
+% 
+%         for i = 1 : 26
+%             for j = 1 : 26
+%                 indicator = (y(s) == i && y(s+1) == j);
+% 
+%                 p = calculateYjYj_1GivenX2(F, B, logz, T, w, x, i, j, s, wordLength)
+% 
+%                 T(i, j) = T(i, j) + indicator - p;
+%             end
+%         end
+%     end
+% 
+% end
+% save('tGrads.mat', 'tGrads');

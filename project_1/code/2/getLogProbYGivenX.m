@@ -9,10 +9,10 @@ function [ log_prob ] = getLogProbYGivenX( y, x, w, T )
         prev_letter = y(i - 1);
         letter = y(i);
         
-        lognum = lognum + T(prev_letter, letter) + dot(w(:, letter), x(:,i));
+        lognum = lognum + T(prev_letter, letter) + w(:, letter)'* x(:,i);
     end
     
-    [F, B, logz] = logMemo(x, w, T);
+    [junk, logz] = get_forward_memo(x, w, T);
     log_prob = lognum - logz;
 end
 

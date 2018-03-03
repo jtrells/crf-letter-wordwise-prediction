@@ -30,7 +30,7 @@
             for i = 1 : 26
                 indicator = y(s) == i;
 
-                p = calculateYjGivenX(F, B, logz, dot(x(:,s), w(:,i)), T, s, i, wordLength);
+                p = calculateYjGivenX(F, B, logz, x(:,s)'* w(:,i), T, s, i, wordLength);
 
                 wGrads(:, i) = wGrads(:, i) + (indicator - p) * x(:, s);
 
