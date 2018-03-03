@@ -15,7 +15,31 @@ num_words = size(words, 2);
 sum_logs = 0;
 
 
-wGrads = zeros(LETTER_SIZE, 26);
+% wGrads = zeros(LETTER_SIZE, 26);
+
+% for index = 1 : num_words
+
+%     word = words{index};
+%     x = word.image;
+%     y = word.letter_number;
+
+%     [F, B, logz] = logMemo(x, w, T);
+%     wordLength = length(y);
+
+%     for s = 1 : wordLength
+
+%         for letter = 1 : 26
+%             indicator = y(s) == letter;
+
+%             p = calculateYjGivenX(F, B, logz, dot(x(:,s), w(:,letter)), T, s, letter, wordLength);
+
+%             wGrads(:, letter) = wGrads(:, letter) + (indicator - p) * x(:, s);
+%         end
+%     end
+% end
+% save('wGrads.mat', 'wGrads');
+
+tGrads = zeros(26, 26);
 
 for index = 1 : num_words
 
@@ -26,20 +50,18 @@ for index = 1 : num_words
     [F, B, logz] = logMemo(x, w, T);
     wordLength = length(y);
 
-    for s = 1 : wordLength
+    for s = 1 : wordLength - 1
 
-        for letter = 1 : 26
-            indicator = y(s) == letter;
+        for i = 1 : 26
+            for j = 1 : 26
+                indicator = (y(s) == i && y(s+1) == j);
 
-            p = calculateYjGivenX(F, B, logz, dot(x(:,s), w(:,letter)), T, s, letter, wordLength);
+                p = calculateYjYj_1GivenX2(F, B, logz, T, w, x, i, j, s, wordLength)
 
-            wGrads(:, letter) = wGrads(:, letter) + (indicator - p) * x(:, s);
+                T(i, j) = T(i, j) + indicator - p;
+            end
         end
     end
 
 end
-
-% tGrads = zeros(26, 26);
-% 
-
-save('wGrads.mat', 'wGrads');
+save('tGrads.mat', 'tGrads');
