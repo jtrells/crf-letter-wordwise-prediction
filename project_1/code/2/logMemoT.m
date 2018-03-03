@@ -1,16 +1,23 @@
-function [ F, B, logz ] = logMemo(x, w, T)
+function [ F, logz, B ] = logMemoT(Phi, num_letters)
     
+    w = reshape(Phi(1:3328,1), 128, 26);
+    T = reshape(Phi(3329:4004,1), 26,26);
+    x = reshape(Phi(4005:end,1), 128, num_letters); 
+
     global NUM_LETTERS;
-    %NUM_LETTERS = alphabet_size;
     WORD_LENGTH = size(x, 2);
     
     F = zeros(NUM_LETTERS, WORD_LENGTH);   % Forward-memo
-    B = zeros(NUM_LETTERS, WORD_LENGTH);   % Backwards-memo
+    B = zeros(NUM_LETTERS, WORD_LENGTH);   % Forward-memo
     
     % initialization for forward calculation
     for i = 1 : NUM_LETTERS
         F(i, 1) = dot(w(:,i), x(:,1));   % ({w.x})
     end
+%     M = max(F(:, 1));
+%     for i = 1 : NUM_LETTERS
+%         F(i, 1) = M + log(F(i, 1) - M);
+%     end
     
     for j = 2 : WORD_LENGTH
        for d = 1 : NUM_LETTERS
@@ -55,5 +62,21 @@ function [ F, B, logz ] = logMemo(x, w, T)
     end
     
     logz = log(sum(exp(F(:, WORD_LENGTH))));
+    
+    % we can get the logz using B
+%     pot_B_1 = zeros(NUM_LETTERS,1);
+%     for i = 1 : NUM_LETTERS
+%         pot_B_1(i, 1) = dot(w(:,i), x(:,WORD_LENGTH));
+%     end
+%     
+%     
+%     logzb_prod = bsxfun(@times, pot_B_1, B(:,1));
+%     logzb_prod = log(sum(exp(logzb_prod)));
+%     
+%     logzb_sum = pot_B_1 + B(:,1);
+%     logzb_sum = log(sum(exp(logzb_sum)));
+    
+    %log(sum(exp(F(:, WORD_LENGTH))))
+    %log(sum(exp(B(:, 1))))
     
 end
