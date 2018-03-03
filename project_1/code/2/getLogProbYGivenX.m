@@ -12,7 +12,7 @@ function [ log_prob ] = getLogProbYGivenX( y, x, w, T )
         lognum = lognum + T(prev_letter, letter) + dot(w(:, letter), x(:,i));
     end
     
-    [F, logz] = logMemo(x, w, T);
+    [F, B, logz] = logMemo(x, w, T);
     log_prob = lognum - logz;
 end
 

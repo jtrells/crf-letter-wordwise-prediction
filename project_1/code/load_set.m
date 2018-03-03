@@ -16,52 +16,54 @@ function [ X, words ] = load_set( file, no_letters )
 %   6th - 128th: Sequence of zeros and ones that make the letter
 % 129th:      I have no idea.
 
-ALPHABET = 'abcdefghijklmnopqrstuvwxyz';
+    ALPHABET = 'abcdefghijklmnopqrstuvwxyz';
 
-clc
-fid = fopen(file);
-X = zeros(no_letters, 128);
-i_x = 1;
+    clc
+    fid = fopen(file);
+    X = zeros(no_letters, 128);
+    i_x = 1;
 
-words = {};
+    words = {};
 
-old_word = -1;
-word = [];
-while ~feof(fid) % not end of the file 
-    s = fgetl(fid); % get a line
-    
-    j=6; x=zeros(1,128);
-    
-    line = strsplit(s);
-    new_word = str2num(line{4});
-    letter = line{2};
-    letter_number = strfind(ALPHABET, letter);
-    
-    if new_word ~= old_word
-        if old_word > 0
-            words{old_word} = word;
+    old_word = -1;
+    word = [];
+    while ~feof(fid) % not end of the file 
+        s = fgetl(fid); % get a line
+
+        j=6; x=zeros(1,128);
+
+        line = strsplit(s);
+        new_word = str2num(line{4});
+        letter = line{2};
+        letter_number = strfind(ALPHABET, letter);
+
+        if new_word ~= old_word
+            if old_word > 0
+                words{old_word} = word;
+            end
+            old_word = new_word;
+
+            word.letter = [];
+            word.letter_number = []; 
+            word.image = [];
         end
-        old_word = new_word;
-        
-        word.letter = [];
-        word.letter_number = []; 
-        word.image = [];
+
+        i = 1;
+        while j <= 128 + 5     %idk what's the use of the last element
+            x(i) = str2num(line{j});
+            j = j + 1;
+            i = i + 1;
+        end
+        X(i_x,:) = x;
+
+        word.letter = [word.letter letter];
+        word.letter_number = [word.letter_number letter_number];
+        word.image = [word.image x'];
+
+        i_x = i_x + 1;
     end
-    
-    i = 1;
-    while j <= length(line) - 1     %idk what's the use of the last element
-        x(i) = str2num(line{j});
-        j = j + 1;
-        i = i + 1;
-    end
-    X(i_x,:) = x;
-    
-    word.letter = [word.letter letter];
-    word.letter_number = [word.letter_number letter_number];
-    word.image = [word.image x'];
-    
-    i_x = i_x + 1;
-end
+
+    words{old_word} = word;
 
 end
 

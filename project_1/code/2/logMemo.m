@@ -1,4 +1,4 @@
-function [ F, logz, B ] = logMemo(x, w, T)
+function [ F, B, logz ] = logMemo(x, w, T)
     
     global NUM_LETTERS;
     WORD_LENGTH = size(x, 2);

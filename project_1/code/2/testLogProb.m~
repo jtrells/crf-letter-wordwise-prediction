@@ -39,5 +39,5 @@ for i = 1 : 4
 end
 p2
 
-% grad(log p (y|X)) = sum(([[ys = y]] - p(ys = y|X)) * xs)
+% grad(log p (y|X)) = sum([[ys = y]] - p(ys = y|X)) * xs)
 

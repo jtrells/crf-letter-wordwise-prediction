@@ -1,0 +1,35 @@
+function probability = calculateYjGivenX(F, B, logZ, wDotX, T, j, yj, wordLength)
+    forward = zeros(26,1);
+    if j > 1
+        for i = 1 : 26
+            forward(i) = F(i, j-1) + T(i, yj);
+        end
+    end
+    
+    backwards = zeros(26, 1);
+    if j < wordLength
+        for i = 1 : 26
+            backwards(i) = B(i, j+1) + T(yj, i);
+        end
+    end
+    
+    
+    forwardSq = repmat(forward, [26,1]);
+    
+    
+    probs = zeros(26,26);
+    for k = 1 : 26
+        for h = 1 : 26
+            probs(h, k) = forward(h) + backwards(k) + wDotX - logZ; 
+        end
+    end
+
+    if j > 1 && j < wordLength
+        probability = sum(sum(exp(probs)));
+    elseif j < wordLength
+        probability = sum(exp(probs(1,:)));
+    else
+        probability = sum(exp(probs(:,1)));
+    end
+end
+
