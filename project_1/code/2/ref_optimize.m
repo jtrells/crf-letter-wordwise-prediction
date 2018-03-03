@@ -6,7 +6,7 @@ function accuracy = ref_optimize(train_data, test_data, c)
   obj = @(model)crf_obj(model, train_data);
   
   % A function handle which computes the test error at each iteration
-  test_obj = @(model, optimValues, state)crf_test(model, test_data);
+  %test_obj = @(model, optimValues, state)crf_test(model, test_data);
   
   % Initial value of the parameters W and T, stored in a vector
   x0 = zeros(128*26+26^2,1);
@@ -16,12 +16,12 @@ function accuracy = ref_optimize(train_data, test_data, c)
                  'GradObj', 'on', ... % the function handle supplied in calling fminunc provides gradient information
                  'MaxIter', 100, ...  % Run maximum 100 iterations. Terminate after that.
                  'MaxFunEvals', 100, ...  % Allow CRF objective/gradient to be evaluated at most 100 times. Terminate after that.
-                 'TolFun', 1e-3, ...  % Terminate when tolerance falls below 1e-3
-                 'OutputFcn', test_obj);  % each iteration, invoke the function handle test_obj to print the test error of the current model
+                 'TolFun', 1e-3)%, ...  % Terminate when tolerance falls below 1e-3
+                 %'OutputFcn', test_obj);  % each iteration, invoke the function handle test_obj to print the test error of the current model
 
   [model, fval, flag] = fminunc(obj, x0, opt);
     
-  [~, accuracy] = crf_test(model, test_data);
+  %[~, accuracy] = crf_test(model, test_data);
   fprintf('CRF test accuracy for c=%g: %g\n', c, accuracy);
   
 
@@ -34,8 +34,8 @@ function accuracy = ref_optimize(train_data, test_data, c)
     T = reshape(x(128*26+1:end), 26, 26); % T is 26*26
     
     f = get_crf_obj(word_list, W, T, c); % compute the objective value of equation (4)
-    g_W = blah; % compute the gradient in W (128*26)
-    g_T = blah; % compute the gradient in T (26*26)
+    g_W = get_gradient_w( word_list, W, T ); % compute the gradient in W (128*26)
+    g_T = get_gradient_t( word_list, W, T ); % compute the gradient in T (26*26)
     g = [g_W(:); g_T(:)]; % flatten the gradient back into a vector
   end
 

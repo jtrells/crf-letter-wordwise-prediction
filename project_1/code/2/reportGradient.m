@@ -39,8 +39,8 @@ sum_logs = 0;
 % end
 % save('wGrads.mat', 'wGrads');
 
-tGrads = zeros(26, 26);
 
+tGrads = zeros(26, 26);
 for index = 1 : num_words
 
     word = words{index};
