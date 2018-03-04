@@ -12,13 +12,19 @@ function [ wGrads ] = get_gradient_w( word_list, w, T )
         x = word.image;
         y = word.letter_number;
 
-        [F, B, logz] = logMemo(x, w, T);
+        [F, logz] = get_forward_memo_mat(x, w, T);
+        [B, junk] = get_backwards_memo_mat(x, w, T);
         wordLength = length(y);
 
+        % trying to minimize number of transformations
+        featureF = repmat(F, [alphabet_size,1]);
+        featureT1 = repmat(T, [alphabet_size,1]);
+        vLogz = repmat(logz, [alphabet_size ^ 2, 1]);
+        
         for s = 1 : wordLength
             for letter = 1 : 26
                 indicator = y(s) == letter;
-                p = calculateYjGivenX(F, B, logz, dot(x(:,s), w(:,letter)), T, s, letter, wordLength, alphabet_size);
+                p = calc_probYj_X(featureF, B, vLogz, x(:,s)'* w(:,letter), T, featureT1, s, letter, wordLength, alphabet_size);
                 wGrads(:, letter) = wGrads(:, letter) + (indicator - p) * x(:, s);
             end
         end
