@@ -77,7 +77,7 @@ wGrads2 = zeros(LETTER_SIZE, 26);
 
 %gT = get_gradient_t(words, w, T);
 %f = get_crf_obj(words, w, T, c);
-gT = get_gradient_t_struct2_v2(words, w, T);
+[gW, gT] = get_gradient_t_struct2_v2(words, w, T);
 tGrads = zeros(26, 26);
 tGrads2 = zeros(26, 26);
 
