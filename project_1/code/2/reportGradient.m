@@ -75,68 +75,77 @@ wGrads2 = zeros(LETTER_SIZE, 26);
 % end
 %save('wGrads_mat.mat', 'wGrads');
 
-
-tGrads = zeros(26, 26);
-tGrads2 = zeros(26, 26);
-
-for index = 1 : num_words
-
-    word = words{index};
-    x = word.image;
-    y = word.letter_number;
-
-    [F, logz] = get_forward_memo_mat(x, w, T);
-    [B, junk] = get_backwards_memo_mat(x, w, T);
-    wordLength = length(y);
-
-    Texp = exp(T);
-    Bexp = exp(B);
-    % trying to minimize number of transformations
-    featureF = repmat(exp(F), [alphabet_size,1]);
-    featureT1 = repmat(Texp, [alphabet_size,1]);
-    %vLogz = repmat(exp(logz), [alphabet_size ^ 2, 1]);
-    
-    % B case is different
-    featureB = [];
-    for i = 1 : size(B,2)
-        sel = Bexp(:,i)';
-        sel = repmat(sel, [alphabet_size,1]);
-        featureB = [featureB reshape(sel, alphabet_size ^ 2, 1)];
-    end
-    
-    featureT2 = [];
-    for i = 1 : alphabet_size
-        sel = Texp(i,:);
-        sel = repmat(sel, [alphabet_size,1]);
-        featureT2 = [featureT2 reshape(sel, alphabet_size ^ 2, 1)];
-    end
-    
-    % pre compute the dot products, and avoid repetitions
-    dotW_Xs = exp(sum(bsxfun(@times, w, x(:,1))));
-    
-    for s = 1 : wordLength - 1
-        
-        % pre compute dot product of next word, and cache columns
-        % cache here all columns depending on the current letter!!!
-        dotW_Xs1 = exp(sum(bsxfun(@times, w, x(:,s+1))));
-        
-        for i = 1 : alphabet_size
-            for j = 1 : alphabet_size
-                indicator = (y(s) == i && y(s+1) == j);
-
-                %p = calculateYjYj_1GivenX2(F, B, logz, T, w, x, i, j, s, wordLength, alphabet_size);
-                %tGrads(i, j) = tGrads(i, j) + indicator - p;
-                %dotWX = w(:,i)'*x(:,s) + w(:,j)'*x(:,s+1);
-                dotWX = dotW_Xs(i) + dotW_Xs1(j);
-                
-                p2 = calc_probYjYj_1_X(featureF, featureB, logz, T, featureT1, featureT2, dotWX, T(i, j), i, j, s, wordLength, alphabet_size);
-                tGrads2(i, j) = tGrads2(i, j) + indicator - p;
-            end
-        end
-        
-        % save calculation for next iteration
-        dotW_Xs = dotW_Xs1;
-    end
-
-end
+%gT = get_gradient_t(words, w, T);
+f = get_crf_obj(words, w, T, c);
+% tGrads = zeros(26, 26);
+% tGrads2 = zeros(26, 26);
+% 
+% for index = 1 : 5
+% 
+%     word = words{index};
+%     x = word.image;
+%     y = word.letter_number;
+% 
+%     [F, logz] = get_forward_memo_mat(x, w, T);
+%     [B, junk] = get_backwards_memo_mat(x, w, T);
+%     wordLength = length(y);
+% 
+%     % trying to minimize number of transformations
+%     featureF = repmat(F, [alphabet_size,1]);
+%     featureT1 = repmat(T, [alphabet_size,1]);
+%     
+%     % B case is different
+%     featureB = [];
+%     for i = 1 : size(B,2)
+%         sel = B(:,i)';
+%         sel = repmat(sel, [alphabet_size,1]);
+%         featureB = [featureB reshape(sel, alphabet_size ^ 2, 1)];
+%     end
+%     
+%     featureT2 = [];
+%     for i = 1 : alphabet_size
+%         sel = T(i,:);
+%         sel = repmat(sel, [alphabet_size,1]);
+%         featureT2 = [featureT2 reshape(sel, alphabet_size ^ 2, 1)];
+%     end
+%     
+%     % pre compute the dot products, and avoid repetitions
+%     dotW_Xs = sum(bsxfun(@times, w, x(:,1)));
+%     
+%     for s = 1 : wordLength - 1
+%         
+%         % pre compute dot product of next word, and cache columns
+%         % cache here all columns depending on the current letter!!!
+%         dotW_Xs1 = sum(bsxfun(@times, w, x(:,s+1)));
+%         if (s>1 && s<wordLength-1) 
+%             Fjminus1 = featureF(:,s-1); 
+%             Bjplus2 = featureB(:,s+2);
+%         else
+%             Fjminus1 = 0; 
+%             Bjplus2=0;
+%         end
+%         
+%         for i = 1 : alphabet_size
+%             featT1 = featureT1(:, i); %Twj
+%             
+%             for j = 1 : alphabet_size
+%                 indicator = (y(s) == i && y(s+1) == j);
+% 
+%                 p = calculateYjYj_1GivenX2(F, B, logz, T, w, x, i, j, s, wordLength, alphabet_size);
+%                 tGrads(i, j) = tGrads(i, j) + indicator - p;
+%                 
+%                 dotWX = dotW_Xs(i) + dotW_Xs1(j);
+%                 
+%                 p2 = calc_probYjYj_1_X(Fjminus1, Bjplus2, B, featureF, featureB, logz, T, featT1, featureT2, dotWX, T(i, j), i, j, s, wordLength, alphabet_size);
+%                 %p2 = calc_probYjYj_1_X2(featureF, B, featureB, logz, dotWX, T(i, j), T, featureT1, w, x, i, j, s, wordLength, alphabet_size);
+%                 tGrads2(i, j) = tGrads2(i, j) + indicator - p2;
+% 
+%             end
+%         end
+%         
+%         % save calculation for next iteration
+%         dotW_Xs = dotW_Xs1;
+%     end
+% 
+% end
 % save('tGrads.mat', 'tGrads');

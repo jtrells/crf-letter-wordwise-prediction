@@ -20,8 +20,9 @@ function accuracy = ref_optimize(train_data, test_data, c)
                  %'OutputFcn', test_obj);  % each iteration, invoke the function handle test_obj to print the test error of the current model
 
   [model, fval, flag] = fminunc(obj, x0, opt);
-    
+  save('model.mat', 'model', 'fval', 'flag');  
   %[~, accuracy] = crf_test(model, test_data);
+  accuracy = 0;
   fprintf('CRF test accuracy for c=%g: %g\n', c, accuracy);
   
 
