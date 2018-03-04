@@ -1,5 +1,7 @@
-% this is more likely wrong but keeping it for the record
-function [tGrads] = get_gradient_t_struct2(word_list, w, T)
+function [ tGrads ] = get_gradient_t_old( word_list, w, T )
+%GET_GRADIENT_T Summary of this function goes here
+%   Detailed explanation goes here
+
     alphabet_size = 26;
 
     num_words = size(word_list,2);
@@ -11,57 +13,51 @@ function [tGrads] = get_gradient_t_struct2(word_list, w, T)
         x = word.image;
         y = word.letter_number;
 
-        [F, logz] = get_forward_memo_mat_struct2(x, w, T);
-        [B, junk] = get_backwards_memo_mat_struct2(x, w, T);
+        [F, logz] = get_forward_memo_mat(x, w, T);
+        [B, junk] = get_backwards_memo_mat(x, w, T);
         wordLength = length(y);
-        
-        expF = exp(F);
-        expB = exp(B);
-        Z = exp(logz);
-        
+
         % trying to minimize number of transformations by remapping the
         % vectors out from the loops
-        featureF = repmat(expF, [alphabet_size,1]);
-        featureB = get_cached_feature_B(expB, alphabet_size);
+        featureF = repmat(F, [alphabet_size,1]);
+        featureT1 = repmat(T, [alphabet_size,1]);
+        featureB = get_cached_feature_B(B, alphabet_size);
+        featureT2 = get_cached_featured_T2(T, alphabet_size);
 
 
         % pre compute the dot products, and avoid repetitions
         dotW_Xs = sum(bsxfun(@times, w, x(:,1)));
 
         for s = 1 : wordLength - 1
-            
-            if s == 1 || s == wordLength - 1
-                msgF = expF(:,s);
-                msgB = expB(:,s+1);
-            else
-                msgF = featureF(:,s);   % 0 when s = 1
-                msgB = featureB(:,s+1); % 0 when s = wordLength - 1
-            end
-            
-            prodMsgs = bsxfun(@times, msgF, msgB);
+
+            % pre compute dot product of next word, and cache columns
             dotW_Xs1 = sum(bsxfun(@times, w, x(:,s+1)));
             
+            % cache here some more colums to avoid indexing in range inside
+            % loops, as they are expensive
+            if (s>1 && s<wordLength-1) 
+                Fjminus1 = featureF(:,s-1); 
+                Bjplus2 = featureB(:,s+2);
+            else
+                Fjminus1 = 0; 
+                Bjplus2=0;
+            end
+
             for i = 1 : alphabet_size
+                featT1 = featureT1(:, i); %Twj
+
                 for j = 1 : alphabet_size
-                    msgTi_iplus1 = T(i,j);
-                    %msgXs = w(:,i)'*x(:,s) + w(:,j)'*x(:,s+1);
-                    msgXs = dotW_Xs(i) + dotW_Xs1(j);
-                    
-                    %scalarSum = exp(msgTi_iplus1 + msgXs - logz);
-                    scalarSum = exp(msgTi_iplus1 + msgXs);
-                    %p = msgF + msgB + scalarSum; 
-                    %p = sum(exp(p));
-                    p = prodMsgs .* scalarSum;
-                    p = p ./ Z;
-                    p = sum(p);
-                    
                     indicator = (y(s) == i && y(s+1) == j);
+                    dotWX = dotW_Xs(i) + dotW_Xs1(j);
+                    p = calc_probYjYj_1_X(Fjminus1, Bjplus2, B, featureF, featureB, logz, T, featT1, featureT2, dotWX, T(i, j), i, j, s, wordLength, alphabet_size);
                     tGrads(i, j) = tGrads(i, j) + indicator - p;
                 end
             end
-            dotW_Xs = dotW_Xs1;    
+
+            % save calculation for next iteration
+            dotW_Xs = dotW_Xs1;
         end
-        
+
     end
 
 end

@@ -33,16 +33,16 @@ function [probs] = calc_probYj_X(featureF, B, vlogZ, wDotX, T, featureT1, j, yj,
         feature_T = T(yj,:)';
         feature_dot = repmat(wDotX,  [alphabet_size, 1]);
         
-        f = feature_B + feature_T + feature_dot - vlogZ(1:26);
+        f = feature_B + feature_T + feature_dot - vlogZ(1:alphabet_size);
         probs = sum(exp(f));
     else
         % probs = probs + exp(F(h, j-1) + T(h, yj) + wDotX - logZ);
         
-        feature_F = featureF(1:26,j-1);
-        feature_T = featureT1(1:26,yj);
+        feature_F = featureF(1:alphabet_size,j-1);
+        feature_T = featureT1(1:alphabet_size,yj);
         feature_dot = repmat(wDotX,  [alphabet_size, 1]);
         
-        f = feature_F + feature_T + feature_dot - vlogZ(1:26);
+        f = feature_F + feature_T + feature_dot - vlogZ(1:alphabet_size);
         probs = sum(exp(f));
     end
 end

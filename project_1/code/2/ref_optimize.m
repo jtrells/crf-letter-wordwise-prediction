@@ -35,8 +35,8 @@ function accuracy = ref_optimize(train_data, test_data, c)
     T = reshape(x(128*26+1:end), 26, 26); % T is 26*26
     
     f = get_crf_obj(word_list, W, T, c); % compute the objective value of equation (4)
-    [g_W, g_T] = get_gradients_tw( word_list, W, T ); % compute the gradient in W (128*26)
-    %g_T = get_gradient_t( word_list, W, T ); % compute the gradient in T (26*26)
+    g_T = get_gradient_t( word_list, W, T, 26 ); % compute the gradient in T (26*26)
+    g_W = get_gradient_w( word_list, W, T, 26); % compute the gradient in W (128*26)
     g = [g_W(:); g_T(:)]; % flatten the gradient back into a vector
   end
 

@@ -10,9 +10,10 @@ function [F, logz] = get_forward_memo_mat_struct2(x, w, T)
     
     potential = zeros(alphabet_size, 1);
     for j = 2 : WORD_LENGTH
-        for i = 1 : alphabet_size
-            potential(i) = w(:,i)' * x(:,j-1);
-        end
+        potential = sum(bsxfun(@times, w, x(:,j-1)))';
+%         for i = 1 : alphabet_size
+%             potential(i) = w(:,i)' * x(:,j-1);
+%         end
         F(:, j) = calculate_memo(potential, F(:, j-1), T, alphabet_size);
     end
     
