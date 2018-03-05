@@ -5,7 +5,7 @@ function gW = get_gradient_w(word_list, w, T, alphabet_size)
     gW = zeros(letter_size, alphabet_size);    % gradients for W
     
     for index = 1 : num_words
-
+        
         word = word_list{index};
         x = word.image;
         y = word.letter_number;
@@ -25,13 +25,16 @@ function gW = get_gradient_w(word_list, w, T, alphabet_size)
             J = log(J);
             
             p = exp(bsxfun(@minus, p_prop, J));
+            
             for i = 1 : alphabet_size
                 indicator = y(s) == i;
                 gW(:,i) = gW(:,i) + (indicator - p(i)) * x(:,s);
             end
          
         end
-        
-     end
+    
+    end
+    
+    gW = bsxfun(@rdivide, gW, num_words);
 end
 

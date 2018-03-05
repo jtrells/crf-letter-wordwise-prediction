@@ -1,6 +1,6 @@
 function [ f_val ] = get_crf_obj( word_list, W, T, c )
 
-    ALPHABET_SIZE = 26;
+    ALPHABET_SIZE = size(W,2);
 
     n = size(word_list, 2);
     
@@ -18,8 +18,8 @@ function [ f_val ] = get_crf_obj( word_list, W, T, c )
         x = word_list{i}.image;
         sum_logs_p = sum_logs_p + getLogProbYGivenX( y, x, W, T );
     end
-    sum_logs = -1 * (c/n) * sum_logs_p;
+    avg_log_likelihood = sum_logs_p / n;
     
-    f_val = sum_logs + sum_w + sum_t;
+    f_val = - c * avg_log_likelihood + sum_w + sum_t;
 end
 

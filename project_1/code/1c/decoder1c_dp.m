@@ -58,3 +58,5 @@ end
 fileId = fopen('result/decode_output.txt', 'wt');
 fprintf(fileId, '%d\n',output');
 fclose(fileId);
+
+y = decoder( x, w, T )

@@ -48,4 +48,6 @@ function gT = get_gradient_t(word_list, w, T, alphabet_size)
         end
         
     end
+    
+    gT = bsxfun(@rdivide, gT, num_words);
 end
