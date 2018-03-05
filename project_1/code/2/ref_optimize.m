@@ -21,7 +21,7 @@ function accuracy = ref_optimize(train_data, test_data, c, alphabet_size)
 
   [model, fval, flag] = fminunc(obj, x0, opt);
   save('model.mat', 'model', 'fval', 'flag');  
-  [~, accuracy] = crf_test(model, test_data, alphabet_size);
+  [~, accuracy] = crf_test(model, test_data, alphabet_size, c);
   fprintf('CRF test accuracy for c=%g: %g\n', c, accuracy);
   
 
@@ -34,6 +34,7 @@ function accuracy = ref_optimize(train_data, test_data, c, alphabet_size)
     T = reshape(x(128*alphabet_size+1:end), alphabet_size, alphabet_size); % T is 26*26
     
     f = get_crf_obj(word_list, W, T, c); % compute the objective value of equation (4)
+    f
     g_T = get_gradient_t( word_list, W, T, alphabet_size ); % compute the gradient in T (26*26)
     g_W = get_gradient_w( word_list, W, T, alphabet_size); % compute the gradient in W (128*26)
     g = [g_W(:); g_T(:)]; % flatten the gradient back into a vector
@@ -42,8 +43,8 @@ function accuracy = ref_optimize(train_data, test_data, c, alphabet_size)
 
   % Compute the test accuracy on the list of words (word_list)
   % x is the current model (w_y and T, stored as a vector)
-  function [stop, accuracy] = crf_test(x, word_list, alphabet_size)
-    
+  function [stop, accuracy] = crf_test(x, word_list, alphabet_size, c)  
+      
     stop = false;   % solver can be terminated if stop is set to true
     
     % x is a vector.  So reshape it into w_y and T

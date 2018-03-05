@@ -17,13 +17,15 @@ function gW = get_gradient_w(word_list, w, T, alphabet_size)
         for s = 1 : wordLength
          
             p_prop = zeros(1, alphabet_size);
-            J = 0;
             for i = 1 : alphabet_size
                 p_prop(i) = F(i,s) + B(i,s) + w(:,i)'*x(:,s);
-                J = J + exp(p_prop(i));
             end
-            J = log(J);
             
+            max_p_prop = max(p_prop);
+            J = log(sum(exp(p_prop - max_p_prop))) + max_p_prop;
+
+            
+%             J = log(sum(exp(p_prop)));
             p = exp(bsxfun(@minus, p_prop, J));
             
             for i = 1 : alphabet_size

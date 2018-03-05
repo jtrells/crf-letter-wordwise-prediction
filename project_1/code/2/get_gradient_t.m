@@ -19,22 +19,21 @@ function gT = get_gradient_t(word_list, w, T, alphabet_size)
   
             dotW_Xs1 = sum(bsxfun(@times, w, x(:,s+1))); % sum(elemt-wise prod)
             % pre compute the normalizer term J for a given s
-            J = 0;
+%             J = 0;
             % store unnormalized probabilities
             p_prop_t = zeros(alphabet_size, alphabet_size);
             
             for i = 1 : alphabet_size
                 for j = 1 : alphabet_size
                     scalars = dotW_Xs(i) + dotW_Xs1(j) + T(i,j);
-                    p_prop_t(i,j) = F(i,s) + B(j,s+1) + scalars;
-                    
-                    J = J + exp(p_prop_t(i,j));
+                    p_prop_t(i,j) = F(i,s) + B(j,s+1) + scalars;                    
                 end
-                
             end
             
+            max_p_prop = max(max(p_prop_t));
+            J = log(sum(sum(exp(p_prop_t - max_p_prop)))) + max_p_prop;
+            
             % get actual probability values
-            J = log(J); 
             pT = exp(bsxfun(@minus, p_prop_t, J));
             
             for i = 1 : alphabet_size                       
