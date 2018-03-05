@@ -1,5 +1,5 @@
-function gW = get_gradient_w(word_list, w, T, alphabet_size)
-    
+function gW = get_gradient_w(word_list, w, T, alphabet_size, c)
+   
     letter_size = 128;
     num_words = size(word_list,2);
     gW = zeros(letter_size, alphabet_size);    % gradients for W
@@ -38,5 +38,6 @@ function gW = get_gradient_w(word_list, w, T, alphabet_size)
     end
     
     gW = bsxfun(@rdivide, gW, num_words);
+    gW = -(c/num_words) * gW + w;
 end
 

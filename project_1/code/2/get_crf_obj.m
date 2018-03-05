@@ -5,9 +5,10 @@ function [ f_val ] = get_crf_obj( word_list, W, T, c )
     n = size(word_list, 2);
     
     sum_w = 0;
-    for i = 1 : ALPHABET_SIZE
-        sum_w = sum_w + W(:,i)' * W(:,i); %norm(W(:,i)).^2;%sqrt(W(:,i)'* W(:,i));
-    end
+    sum_w = norm(W, 'fro')^2;
+%     for i = 1 : ALPHABET_SIZE
+%         sum_w = sum_w + W(:,i)' * W(:,i); %norm(W(:,i)).^2;%sqrt(W(:,i)'* W(:,i));
+%     end
     
     sum_t = sum(sum(T.^2));
     

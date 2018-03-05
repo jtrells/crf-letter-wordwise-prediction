@@ -1,4 +1,4 @@
-function gT = get_gradient_t(word_list, w, T, alphabet_size)
+function gT = get_gradient_t(word_list, w, T, alphabet_size, c)
     
     num_words = size(word_list,2);
     gT = zeros(alphabet_size, alphabet_size);  % gradients for T
@@ -49,4 +49,5 @@ function gT = get_gradient_t(word_list, w, T, alphabet_size)
     end
     
     gT = bsxfun(@rdivide, gT, num_words);
+    gT = -(c/num_words) * gT + T; 
 end
