@@ -6,11 +6,10 @@ function [ f_val ] = get_crf_obj( word_list, W, T, c )
     
     sum_w = 0;
     for i = 1 : ALPHABET_SIZE
-        sum_w = sum_w + norm(W(:,i))^2;%sqrt(W(:,i)'* W(:,i));
+        sum_w = sum_w + W(:,i)' * W(:,i); %norm(W(:,i)).^2;%sqrt(W(:,i)'* W(:,i));
     end
-    sum_w = 0.5 * sum_w;
-
-    sum_t = 0.5 * sum(sum(T.^2));
+    
+    sum_t = sum(sum(T.^2));
     
     sum_logs_p = 0;
     for i = 1 : n
@@ -20,7 +19,8 @@ function [ f_val ] = get_crf_obj( word_list, W, T, c )
     end
     avg_log_likelihood = sum_logs_p / n;
     
-    f_val = - (c * avg_log_likelihood) + sum_w + sum_t;
+    f_val = - c * avg_log_likelihood + 0.5 * (sum_w + sum_t);
     
+%     fprintf("f = %g,\n\t logp %g, sum_w %g, sum_t %g\n", f_val, avg_log_likelihood, sum_w, sum_t);
 end
 

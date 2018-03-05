@@ -9,7 +9,7 @@ function accuracy = ref_optimize(train_data, test_data, c, alphabet_size)
   test_obj = @(model, optimValues, state)crf_test(model, test_data, alphabet_size);
   
   % Initial value of the parameters W and T, stored in a vector
-  x0 = zeros(128*alphabet_size+alphabet_size^2,1);
+  x0 = zeros(128*alphabet_size+alphabet_size^2,1);%zeros(128 * 26 + 676, 1); 
 
   opt = optimset('display', 'iter-detailed', ... % print detailed information at each iteration of optimization
                  'LargeScale', 'off', ... % This makes sure that quasi-Newton algorithm is used. Do not use the active set algorithm (when LargeScale is set to 'on')
@@ -20,6 +20,7 @@ function accuracy = ref_optimize(train_data, test_data, c, alphabet_size)
                  'OutputFcn', test_obj);  % each iteration, invoke the function handle test_obj to print the test error of the current model
 
   [model, fval, flag] = fminunc(obj, x0, opt);
+  fprintf('flag %g\n', flag);
   save('model.mat', 'model', 'fval', 'flag');  
   [~, accuracy] = crf_test(model, test_data, alphabet_size, c);
   fprintf('CRF test accuracy for c=%g: %g\n', c, accuracy);

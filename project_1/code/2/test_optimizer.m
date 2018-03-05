@@ -50,17 +50,22 @@ NUM_LETTERS = 3;
 alphabet_size = 26;
 word_list = {};
 test_list = {};
-for i = 1 : 100
-    word_list{i} = {};
-    word_list{i}.image = train_words{i}.image;
-    word_list{i}.letter_number = train_words{i}.letter_number;
+% for i = 1 : 100
+%     word_list{i} = {};
+%     word_list{i}.image = train_words{i}.image;
+%     word_list{i}.letter_number = train_words{i}.letter_number;
+% 
+%     test_list{i} = {};
+%     test_list{i}.image = word_list{i}.image;
+%     test_list{i}.letter_number = word_list{i}.letter_number;
+% end
 
-    test_list{i} = {};
-    test_list{i}.image = word_list{i}.image;
-    test_list{i}.letter_number = word_list{i}.letter_number;
-end
+word_list{1} = words{2}; % 9 letters
+word_list{2} = words{4}; % 9 letters
 
-c = 00;
+test_list{1} = words{3};
+
+c = 1000;
 
 accuracy = ref_optimize(word_list, test_list, c, alphabet_size);
 accuracy

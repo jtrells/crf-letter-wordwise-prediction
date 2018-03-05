@@ -23,3 +23,6 @@ y = word.letter_number;
 [B1, logBz1] = get_backwards_memo_mat(x, w, T);
 [B2, logBz2] = get_backwards_memo_mat_struct2(x, w, T);
 [B3, logBz3] = get_backwards_memo(x, w, T);
+
+
+
