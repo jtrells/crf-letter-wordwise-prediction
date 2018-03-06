@@ -3,7 +3,7 @@
 % offsets can be negative
 function Y = translation(X, offset)
   
-  Y = X;
+%   Y = X;
   
   ox = offset(1); 
   oy = offset(2);
@@ -12,10 +12,11 @@ function Y = translation(X, offset)
   
   % General case where ox and oy can be negative 
   % See below for the case where ox and oy are positive (used in this project)
-  Y(max(1,1+ox):min(lenx, lenx+ox), max(1,1+oy):min(leny, leny+oy)) ...
-     = X(max(1,1-ox):min(lenx, lenx-ox), max(1,1-oy):min(leny, leny-oy));
+  Y = zeros(lenx,leny);
+%   Y(max(1,1+ox):min(lenx, lenx+ox), max(1,1+oy):min(leny, leny+oy)) ...
+%     = X(max(1,1-ox):min(lenx, lenx-ox), max(1,1-oy):min(leny, leny-oy));
 
   % Special case where ox and oy are both positive (used in this project)
-  %   Y(1+ox:lenx, 1+oy:leny) = X(1:lenx-ox, 1:leny-oy);
+    Y(1+ox:lenx, 1+oy:leny) = X(1:lenx-ox, 1:leny-oy);
 
 end
