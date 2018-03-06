@@ -16,7 +16,7 @@ function Y = rotation(X, alpha)
   
   % imrotate could pad 0 at some pixels.
   % At those pixels, fill in the original values
-  idx = find(Y == 0);
-  Y(idx) = X(idx);
-
+  %idx = find(Y == 0);
+  %Y(idx) = X(idx);
+  %Y(idx) = 0;
 end
