@@ -65,7 +65,7 @@ word_list{2} = words{4}; % 9 letters
 
 test_list{1} = words{3};
 
-c = 1;
+c = 1000;
 
-accuracy = ref_optimize(word_list, test_list, c, alphabet_size);
+accuracy = ref_optimize(words, test_words, c, alphabet_size);
 accuracy

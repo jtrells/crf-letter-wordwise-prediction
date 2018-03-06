@@ -37,7 +37,7 @@ function gW = get_gradient_w(word_list, w, T, alphabet_size, c)
     
     end
     
-    gW = bsxfun(@rdivide, gW, num_words);
+    %gW = bsxfun(@rdivide, gW, num_words);
     gW = -(c/num_words) * gW + w;
 end
 
