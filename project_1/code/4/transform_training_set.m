@@ -34,4 +34,4 @@ while ~feof(fid)
     end
 end
 
-save('transformed_training_data.mat', 'train_words');
+save('transformed_training_data_no_pad.mat', 'train_words');
