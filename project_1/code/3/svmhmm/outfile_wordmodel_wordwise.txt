@@ -5,25 +5,34 @@ Runtime (without IO) in cpu-seconds: 0.09
 Average loss on test set: 2.6493
 Zero/one-error on test set: 86.59% (461 correct, 2978 incorrect, 3439 total)
 Average loss per token: 0.3478
-Accuracy = 65.22%
+Accuracy = 
+
+Reading model...done.
+Reading test examples... 3439 examples, 26198 tokens, 128 features, 26 classes... done.
+Classifying test examples...done
+Runtime (without IO) in cpu-seconds: 0.07
+Average loss on test set: 1.9011
+Zero/one-error on test set: 73.51% (911 correct, 2528 incorrect, 3439 total)
+Average loss per token: 0.2496
+Accuracy = 
 
 Reading model...done.
 Reading test examples... 3439 examples, 26198 tokens, 128 features, 26 classes... done.
 Classifying test examples...done
 Runtime (without IO) in cpu-seconds: 0.09
-Average loss on test set: 1.9011
-Zero/one-error on test set: 73.51% (911 correct, 2528 incorrect, 3439 total)
-Average loss per token: 0.2496
-Accuracy = 75.04%
+Average loss on test set: 1.3449
+Zero/one-error on test set: 58.56% (1425 correct, 2014 incorrect, 3439 total)
+Average loss per token: 0.1765
+Accuracy = 
 
 Reading model...done.
 Reading test examples... 3439 examples, 26198 tokens, 128 features, 26 classes... done.
 Classifying test examples...done
-Runtime (without IO) in cpu-seconds: 0.06
-Average loss on test set: 1.3449
-Zero/one-error on test set: 58.56% (1425 correct, 2014 incorrect, 3439 total)
-Average loss per token: 0.1765
-Accuracy = 82.35%
+Runtime (without IO) in cpu-seconds: 0.09
+Average loss on test set: 1.2094
+Zero/one-error on test set: 53.71% (1592 correct, 1847 incorrect, 3439 total)
+Average loss per token: 0.1588
+Accuracy = 
 
 Reading model...done.
 Reading test examples... 3439 examples, 26198 tokens, 128 features, 26 classes... done.
@@ -32,4 +41,14 @@ Runtime (without IO) in cpu-seconds: 0.09
 Average loss on test set: 1.1614
 Zero/one-error on test set: 52.25% (1642 correct, 1797 incorrect, 3439 total)
 Average loss per token: 0.1525
-Accuracy = 84.75%
+Accuracy = 
+
+Reading model...done.
+Reading test examples... 3439 examples, 26198 tokens, 128 features, 26 classes... done.
+Classifying test examples...done
+Runtime (without IO) in cpu-seconds: 0.09
+Average loss on test set: 1.1300
+Zero/one-error on test set: 50.68% (1696 correct, 1743 incorrect, 3439 total)
+Average loss per token: 0.1483
+Accuracy = 
+
