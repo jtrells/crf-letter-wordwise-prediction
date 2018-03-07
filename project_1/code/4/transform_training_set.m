@@ -1,4 +1,4 @@
-trainData = matfile(strcat(pwd,'/code/2/train_words_x.mat'));
+trainData = matfile(strcat(pwd,'/code/2/test.mat'));
 train_words = trainData.words;
 
 %transform_data = importdata('/data/transform.txt');
@@ -34,4 +34,4 @@ while ~feof(fid)
     end
 end
 
-save('transformed_training_data_no_pad.mat', 'train_words');
+save('transformed_test_data_no_pad.mat', 'train_words');
