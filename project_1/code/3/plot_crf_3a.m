@@ -30,29 +30,34 @@ for i = 1 : length(c_values)
 end
 
 % values obtained from other models
-y_letters_svm_hmm = [0.355, 0.5905, 0.6844, 0.7333];
-y_letters_liblinear = [0.4835, 0.6117, 0.6807, 0.6946, 0.6971, 0.6981];
-%y_word_svm_hmm = [0.355];
-y_words_liblinear = [0.28, 0.29, 0.33, 0.42];
+y_letters_svm_hmm = [0.355, 0.5905, 0.6844, 0.7195, 0.7333, 0.7403];
+y_letters_liblinear = [0.4835, 0.6117, 0.6807, 0.6946, 0.6971, 0.6995];
+y_words_svm_hmm = [0.1350, 0.2649, 0.4144, 0.4629, 0.4775, 0.4932];
+y_words_liblinear = [0.2832, 0.29, 0.3383, 0.3943, 0.4210, 0.5221];
 
 figure('NumberTitle', 'off', 'Name', 'Letter-wise Accuracy'); 
-plot(x, y_letters_crf, 'b-*', x, y_letters_liblinear, 'k-*', x, y_letters_crf_train, 'b--o');
+plot(x, y_letters_crf, 'b-*', ...
+     x, y_letters_liblinear, 'k-*', ...
+     x, y_letters_svm_hmm, 'r-+');
 ax = gca;
 set(gca,'XTick',x);
 set(gca,'XLim', [-100 5100]);
 set(gca,'YLim', [0 1]);
-xlabel('x')
+xlabel('C')
 ylabel('accuracy');
-legend('CRF', 'SVM-MC', 'CRF-Train');
+legend('CRF', 'SVM-MC', 'SVM-Struct');
 
 figure('NumberTitle', 'off', 'Name', 'Word-wise Accuracy');
-plot(x, y_words_crf, 'g--o')
+plot(x, y_words_crf, 'b-o', ...
+     x, y_words_liblinear, 'k-*', ...
+     x, y_words_svm_hmm, 'r-+');
 ax = gca;
 set(gca,'XTick',x);
-set(gca,'XLim', [-100 1100]);
+set(gca,'XLim', [-100 5100]);
 set(gca,'YLim', [0 1]);
-xlabel('x')
+xlabel('C')
 ylabel('accuracy');
+legend('CRF', 'SVM-MC', 'SVM-Struct');
 
 % hold on
 % for ii = 1:length(x)
