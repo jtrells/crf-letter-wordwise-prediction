@@ -2,12 +2,13 @@ data = matfile(strcat(pwd,'/code/4/transformed_test_data_no_pad.mat'));
 words = data.train_words;
 
 
-fileId = fopen('2000.txt', 'wt');
+fileId = fopen('500.txt', 'wt');
 
 count_letters = 1;
-limit = 2000;
+limit = 500;
+
+% print the first X transformed letters
 for i = 1 : length(words)
-    
     word = words{i}.letter_number;
     for j = 1 : length(word)
         label = word(j);
@@ -31,7 +32,30 @@ for i = 1 : length(words)
     
     if count_letters > limit
        break
+    end  
+end
+
+% fill the file with the remaining letters
+transform_file = strcat(pwd,'/data/test_struct.txt');
+fid = fopen(transform_file);
+count_transformed = 1;
+while ~feof(fid)
+    if count_transformed < limit
+        count_transformed = count_transformed + 1;
+        continue;
     end
     
+    s = fgetl(fid); % get a line
+    line = strsplit(s);
+    line{2} = strcat('qid:', num2str(count_letters));
+    
+    for i = 1 : length(line)
+        if i ~= 2
+            fprintf(fileId, '%s ', line{i});
+        end
+    end
+    fprintf(fileId, '\n');
+    count_letters = count_letters + 1;
 end
+
 fclose(fileId);
