@@ -1,22 +1,23 @@
-function [ accuracy ] = compare( y_predict, word_list )
+function [ letter_accuracy,  word_accuracy] = compare( y_predict, word_list )
     
-    count = 0;
     total_letters = 0;
+    total_words = length(word_list);
+    count_same_words = 0;
+    count_same_letters = 0;
     
-    %2b asks for letters-wise comparison
-    for i = 1 : length(word_list)
+    for i = 1 : total_words
         y = word_list{i}.letter_number;
         y_p = y_predict{i};
         
-        for j = 1 : length(y)
-            if y(j) == y_p(j)
-                count = count + 1;
-            end
-            total_letters = total_letters + 1;
-        end
+        % check word-wise comparison
+        if sum(y - y_p) == 0; count_same_words = count_same_words + 1; end
+        % checik letter-wise comparison
+        count_same_letters = count_same_letters + sum(abs(y - y_p)==0);
+        total_letters = total_letters + length(y);
     end
     
-    accuracy = count / total_letters;
+    letter_accuracy = count_same_letters / total_letters;
+    word_accuracy = count_same_words / total_words;
     
 end
 
