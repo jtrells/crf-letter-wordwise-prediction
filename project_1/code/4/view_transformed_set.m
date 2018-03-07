@@ -1,7 +1,7 @@
 train_data = matfile(strcat(pwd,'/code/2/train_words_x.mat'));
 train_words = train_data.words;
 
-transformed_data = matfile(strcat(pwd,'/code/4/transformed_training_data.mat'));
+transformed_data = matfile(strcat(pwd,'/code/4/transformed_training_data_no_pad.mat'));
 transformed_words = transformed_data.train_words;
 
 % r 2551 15
@@ -21,10 +21,10 @@ show_transformed(train_words, transformed_words, 3213);
 show_transformed(train_words, transformed_words, 851);
 %show_transformed(train_words, transformed_words, 1140);
 
-image = reshape(train_words{3213}.image(:,1), 8, 16);
-rotated_image = rotation(image, 15);
-translated_image = translation(image, [3, 3]);
-figure;imshow(rotated_image');
-figure;imshow(translated_image');
+% image = reshape(train_words{3213}.image(:,1), 8, 16);
+% rotated_image = rotation(image, 15);
+% translated_image = translation(image, [3, 3]);
+% figure;imshow(rotated_image');
+% figure;imshow(translated_image');
 
 %show_transformed(train_words, transformed_words, 582); 
