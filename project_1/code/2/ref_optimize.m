@@ -19,7 +19,7 @@ function accuracy = ref_optimize(train_data, test_data, c, alphabet_size)
                  'GradObj', 'on', ... % the function handle supplied in calling fminunc provides gradient information
                  'MaxIter', 100, ...  % Run maximum 100 iterations. Terminate after that.
                  'MaxFunEvals', 100, ...  % Allow CRF objective/gradient to be evaluated at most 100 times. Terminate after that.
-                 'TolFun', 1e-3)%, ...  % Terminate when tolerance falls below 1e-3
+                 'TolFun', 1e-3);%, ...  % Terminate when tolerance falls below 1e-3
                  %'OutputFcn', test_obj);  % each iteration, invoke the function handle test_obj to print the test error of the current model
 
   [model, fval, flag] = fminunc(obj, x0, opt);

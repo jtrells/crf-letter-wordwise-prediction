@@ -17,5 +17,5 @@ c = 1000;
 %words = words{1:5};
 %res = get_crf_obj( words, w, T, c );
 
-accuracy = ref_optimize(test_words, train_words, 1000);
+accuracy = ref_optimize(test_words, train_words, c, 26);
 accuracy

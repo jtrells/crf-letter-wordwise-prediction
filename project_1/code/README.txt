@@ -3,6 +3,8 @@ README
 CS-594: Project 1
 Team: Kristine H. Lee, Ashwini Naik, Juan Trelles Trabucco
 
+To execute the code please set Matlab's pwd to the folder containing /code, /data /result
+
 1c) folder 1
 -----------
 Run the script decoder1c_dp.m to decode the input sequence. 
