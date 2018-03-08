@@ -1,5 +1,6 @@
 function gT = get_gradient_t(word_list, w, T, alphabet_size, c)
-    
+% Calculate the gradient of the objective function with respect to T
+
     num_words = size(word_list,2);
     gT = zeros(alphabet_size, alphabet_size);  % gradients for T
     

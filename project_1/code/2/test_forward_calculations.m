@@ -1,3 +1,5 @@
+% comparing different approaches to implement the memo tables for
+% performance purposes
 global NUM_LETTERS LETTER_SIZE;
 
 LETTER_SIZE = 128;

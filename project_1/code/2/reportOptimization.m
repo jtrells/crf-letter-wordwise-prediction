@@ -2,6 +2,8 @@ global NUM_LETTERS LETTER_SIZE;
 NUM_LETTERS = 26;
 LETTER_SIZE = 128;
 
+% run the optimizer for the train dataset
+
 X = importdata(strcat(pwd,'/code/2/model.txt'));
 %accuracy = ref_optimize(train_data, test_data, c)
 [w, T] = loadModel(strcat(pwd,'/code/2/model.txt'));

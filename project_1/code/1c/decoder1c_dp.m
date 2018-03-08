@@ -8,7 +8,7 @@ LETTER_SIZE = 128;
 NUM_LETTERS = 26;
 ALPHABET = 'abcdefghijklmnopqrstuvwxyz';
 
-[x, w, T] = loadDecoderSet('/data/decode_input.txt'); 
+[x, w, T] = loadDecoderSet(strcat(pwd,'/data/decode_input.txt')); 
 
 % Initialize memo table for first character against alphabet
 memo = zeros(1,NUM_LETTERS);
@@ -59,4 +59,5 @@ fileId = fopen('result/decode_output.txt', 'wt');
 fprintf(fileId, '%d\n',output');
 fclose(fileId);
 
-y = decoder( x, w, T )
+% test of the compact version using for part 2
+y = decoder( x, w, T );

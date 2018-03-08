@@ -10,7 +10,7 @@ LETTER_SIZE = 128;
 NUM_LETTERS = 26;
 WORD_RECURSION_LENGTH = 4;
 
-[X, W, T] = loadDecoderSet('/data/decode_input.txt'); 
+[X, W, T] = loadDecoderSet(strcat(pwd,'/data/decode_input.txt')); 
 
 max_potential = -1000;
 max_word = zeros(1, WORD_LENGTH);

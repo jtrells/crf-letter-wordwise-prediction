@@ -1,5 +1,7 @@
 function [ letter_accuracy,  word_accuracy] = compare( y_predict, word_list )
-    
+% compare the ground truth with the predicted values.
+% return the letter and word accuracy
+
     total_letters = 0;
     total_words = length(word_list);
     count_same_words = 0;

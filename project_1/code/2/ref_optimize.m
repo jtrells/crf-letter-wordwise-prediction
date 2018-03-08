@@ -12,6 +12,8 @@ function accuracy = ref_optimize(train_data, test_data, c, alphabet_size)
   % Initial value of the parameters W and T, stored in a vector
   x0 = randn(128*alphabet_size+alphabet_size^2,1);%zeros(128 * 26 + 676, 1); 
 
+  % uncomment OutputFcn to show the accuracy per iteration, but runs much
+  % slower
   opt = optimset('display', 'iter-detailed', ... % print detailed information at each iteration of optimization
                  'LargeScale', 'off', ... % This makes sure that quasi-Newton algorithm is used. Do not use the active set algorithm (when LargeScale is set to 'on')
                  'GradObj', 'on', ... % the function handle supplied in calling fminunc provides gradient information
@@ -20,9 +22,6 @@ function accuracy = ref_optimize(train_data, test_data, c, alphabet_size)
                  'TolFun', 1e-3)%, ...  % Terminate when tolerance falls below 1e-3
                  %'OutputFcn', test_obj);  % each iteration, invoke the function handle test_obj to print the test error of the current model
 
-%   [ff, gg] = obj(x0);
-%   [fff, ggg] = gradest(obj, x0);
-%   max(max(abs(gg(:)-ggg(:))))
   [model, fval, flag] = fminunc(obj, x0, opt);
   fprintf('flag %g\n', flag);
   

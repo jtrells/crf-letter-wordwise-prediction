@@ -1,4 +1,6 @@
 function [F, logz] = get_forward_memo_mat_struct2(x, w, T)
+% Get the forward memo using a vectorized approach and log trick
+
 % Changing the struct so we go potential x_i and potential y_i, y_i+1 on
 % each iteration. Only changes in the initialization and the potential
 

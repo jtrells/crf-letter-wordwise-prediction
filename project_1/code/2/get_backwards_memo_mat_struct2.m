@@ -1,5 +1,5 @@
 function [B, logZ] = get_backwards_memo_mat_struct2(x, w, T)
-    
+% Calculate the backwards memo and log Z using a vectorized approach and using the log trick    
     WORD_LENGTH = size(x, 2);
     alphabet_size = size(w,2);
     
